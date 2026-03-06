@@ -12,4 +12,8 @@ public class PingController {
         return "pong";
     }
 
+    @GetMapping("/api/ping/error")
+    public String pingError() {
+        throw new IllegalArgumentException("테스트용 에러입니다.");
+    }
 }
