@@ -19,7 +19,7 @@ public class FileJobController {
         this.fileJobService = fileJobService;
     }
 
-    @PostMapping("/files")
+    @PostMapping(value = "/files", consumes = "multipart/form-data")
     public FileJobResponse upload(@RequestPart("file") @NotNull MultipartFile file) {
         return FileJobResponse.from(fileJobService.upload(file));
     }
