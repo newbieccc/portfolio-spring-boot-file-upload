@@ -75,4 +75,10 @@ public class FileJobService {
             return job;
         }
     }
+
+    @Transactional(readOnly = true)
+    public FileJob get(Long id) {
+        return fileJobRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("파일 작업을 찾을 수 없습니다. id=" + id));
+    }
 }
