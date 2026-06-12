@@ -18,9 +18,22 @@ public class CsvProcessor {
         try (BufferedReader br = new BufferedReader(new FileReader(storedPath))) {
 
             String header = br.readLine();
-            if (header == null || !header.trim().equals("bizDate,itemCode,qty")) {
+
+            if (header == null) {
                 throw new IllegalArgumentException("CSV 헤더가 올바르지 않습니다.");
             }
+
+            header = removeBom(header).trim();
+
+            String[] headerParts = header.split(",", -1);
+
+            if (headerParts.length != 3
+                    || !headerParts[0].equals("bizDate")
+                    || !headerParts[1].equals("itemCode")
+                    || !headerParts[2].equals("qty")) {
+                throw new IllegalArgumentException("CSV 헤더가 올바르지 않습니다. (bizDate, itemCode, qty)");
+            }
+
 
             List<CsvRow> rows = new ArrayList<>();
 
@@ -74,7 +87,12 @@ public class CsvProcessor {
         } catch (Exception e) {
             throw new RuntimeException("CSV 처리중 오류가 발생했습니다.");
         }
-
     }
 
+    private static String removeBom(String text) {
+        if (text != null && !text.isEmpty() && text.charAt(0) == '\uFEFF') {
+            return text.substring(1);
+        }
+        return text;
+    }
 }
